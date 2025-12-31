@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Location Verification</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+
+<h3>Location Verification</h3>
+<p id="status">Requesting GPS permission…</p>
+
+<script>
+if (!navigator.geolocation) {
+  document.getElementById("status").innerText =
+    "Geolocation not supported on this device";
+} else {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      document.getElementById("status").innerText =
+        `Latitude: ${pos.coords.latitude}
+Longitude: ${pos.coords.longitude}
+Accuracy: ${pos.coords.accuracy} meters`;
+    },
+    (err) => {
+      document.getElementById("status").innerText =
+        "Location access denied";
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}
+</script>
+
+</bod
